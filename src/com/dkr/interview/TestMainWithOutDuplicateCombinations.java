@@ -103,7 +103,7 @@ public class TestMainWithOutDuplicateCombinations {
 				// System.out.print( " "+name +" :"+priceNames.get(name));
 				sum = sum + priceNames.get(name);
 			}
-			if (sum == 5) {
+			if (sum <= 5 && names.size()>=2) {
 				finalResult.add(names);
 				System.out.println(names + "  == Sum :" + sum);
 			}
