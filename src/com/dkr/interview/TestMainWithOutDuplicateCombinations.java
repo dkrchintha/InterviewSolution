@@ -33,53 +33,17 @@ import java.util.Set;
   
   [1-“Lettuce", 1-“Cheese", 3-“Chicken", 1-“Bread", 2-“Bean Patty"]
   
-[Bread, Bean Patty, Bean Patty]
-[Lettuce, Lettuce, Lettuce, Bread, Bread]
-[Lettuce, Lettuce, Chicken]
-[Cheese, Cheese, Bread, Bread, Bread]
-[Lettuce, Lettuce, Cheese, Bean Patty]
-[Cheese, Cheese, Cheese, Cheese, Cheese]
-[Lettuce, Cheese, Bread, Bread, Bread]
-[Lettuce, Bread, Bread, Bean Patty]
-[Lettuce, Cheese, Cheese, Cheese, Cheese]
-[Lettuce, Chicken, Bread]
-[Bread, Bread, Bread, Bread, Bread]
-[Cheese, Cheese, Cheese, Bean Patty]
-[Lettuce, Cheese, Cheese, Cheese, Bread]
-[Lettuce, Cheese, Chicken]
-[Cheese, Chicken, Bread]
-[Lettuce, Cheese, Cheese, Bean Patty]
-[Lettuce, Lettuce, Lettuce, Lettuce, Bread]
-[Lettuce, Lettuce, Lettuce, Cheese, Cheese]
-[Cheese, Bread, Bread, Bean Patty]
-[Cheese, Cheese, Cheese, Cheese, Bread]
-[Lettuce, Lettuce, Lettuce, Lettuce, Cheese]
-[Lettuce, Lettuce, Lettuce, Cheese, Bread]
-[Lettuce, Lettuce, Cheese, Bread, Bread]
-[Lettuce, Lettuce, Bread, Bean Patty]
-[Lettuce, Bean Patty, Bean Patty]
-[Lettuce, Lettuce, Bread, Bread, Bread]
-[Chicken, Bean Patty]
-[Lettuce, Lettuce, Lettuce, Lettuce, Lettuce]
-[Lettuce, Lettuce, Cheese, Cheese, Cheese]
-[Cheese, Bread, Bread, Bread, Bread]
-[Lettuce, Bread, Bread, Bread, Bread]
-[Cheese, Cheese, Chicken]
-[Cheese, Cheese, Bread, Bean Patty]
-[Lettuce, Cheese, Cheese, Bread, Bread]
-[Lettuce, Cheese, Bread, Bean Patty]
-[Bread, Bread, Bread, Bean Patty]
-[Chicken, Bread, Bread]
-[Lettuce, Lettuce, Lettuce, Bean Patty]
-[Cheese, Bean Patty, Bean Patty]
-[Lettuce, Lettuce, Cheese, Cheese, Bread]
-[Cheese, Cheese, Cheese, Bread, Bread]
+[Cheese, Chicken, Bread]  == Sum :5
+[Bean Patty, Chicken]  == Sum :5
+[Lettuce, Cheese, Chicken]  == Sum :5
+[Lettuce, Chicken, Bread]  == Sum :5
+[Lettuce, Bean Patty, Cheese, Bread]  == Sum :5
 
   
  
   */
 
-public class TestMain {
+public class TestMainWithOutDuplicateCombinations {
 
 	public static void main(String[] args) {
 
@@ -93,12 +57,12 @@ public class TestMain {
 		priceNameMap.put("Bread", 1);
 		priceNameMap.put("Bean Patty", 2);
 
-		printListNewLine(findCombination4(prices, 5, productNames),priceNameMap);
+		printAndFilterResults(findCombination4(prices, 5, productNames), priceNameMap);
 	}
 
-	public static Set<List<String>> findCombination4(int[] prices, int targetPrice, String[] productNames) {
+	public static Set<Set<String>> findCombination4(int[] prices, int targetPrice, String[] productNames) {
 		Set<List<Integer>> resultPrices = new HashSet<>();
-		Set<List<String>> resultNames = new HashSet<>();
+		Set<Set<String>> resultNames = new HashSet<>();
 		withRecurrsive(prices, 0, targetPrice, resultPrices, new ArrayList(), resultNames, new ArrayList(),
 				productNames);
 //		printListNewLine(resultNames);
@@ -106,12 +70,12 @@ public class TestMain {
 	}
 
 	public static void withRecurrsive(int[] prices, int start, int target, Set<List<Integer>> resultPrices,
-			List<Integer> priceslist, Set<List<String>> resultNames, List<String> nameslist, String[] productNames) {
+			List<Integer> priceslist, Set<Set<String>> resultNames, List<String> nameslist, String[] productNames) {
 		if (target < 0)
 			return;
 		if (target == 0) {
 			resultPrices.add(new ArrayList(priceslist));
-			resultNames.add(new ArrayList(nameslist));
+			resultNames.add(new HashSet(nameslist));
 		}
 		for (int i = start; i < prices.length; i++) {
 			priceslist.add(prices[i]);
@@ -129,16 +93,23 @@ public class TestMain {
 		}
 	}
 
-	public static void printListNewLine(Set<List<String>> namesList, Map<String, Integer> priceNames) {
-		for (List<String> names : namesList) {
+	public static Set<Set<String>> printAndFilterResults(Set<Set<String>> namesList, Map<String, Integer> priceNames) {
+
+		Set<Set<String>> finalResult = new HashSet<>();
+		for (Set<String> names : namesList) {
 			int sum = 0;
 			for (String name : names) {
-				
-				//System.out.print( " "+name +" :"+priceNames.get(name));
+
+				// System.out.print( " "+name +" :"+priceNames.get(name));
 				sum = sum + priceNames.get(name);
 			}
-			System.out.println();
-			System.out.println(names + "  == Sum :" + sum);
+			if (sum == 5) {
+				finalResult.add(names);
+				System.out.println(names + "  == Sum :" + sum);
+			}
+
 		}
+
+		return finalResult;
 	}
 }
